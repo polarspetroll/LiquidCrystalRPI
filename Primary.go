@@ -59,7 +59,7 @@ func (l LCD) Clear() {
 	l.write(0x01, 0)
 }
 
-func (l LCD) BackLighOff() {
+func (l LCD) BackLightOff() {
 	l.Device.Write([]byte{0x00})
 }
 
