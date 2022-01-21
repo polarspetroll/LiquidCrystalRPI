@@ -1,4 +1,4 @@
-module LiquidCrystalRPI
+module github.com/polarspetroll/LiquidCrystalRPI
 
 go 1.17
 
