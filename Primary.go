@@ -22,6 +22,8 @@ func initialize() error {
 
 }
 
+// This function returns an object that represents a LCD.
+// The addr is the I²C device address (0x27 is the most common one).
 func NewLCD(addr uint16) (lcd LCD, err error) {
 	err = initialize()
 	if err != nil {
@@ -57,6 +59,18 @@ func (l LCD) write(b, n byte) {
 	l.write_byte(n | ((b << 4) & 0xF0) | 0x08)
 }
 
+// This function prints a string on the LCD.
+//txt is the string that you want to print.
+//line is the line of the text.
+/*
+Example:
+	func main() {
+		...
+		lcd.Print("Hello World!", 1) // print 'Hello World' at line 1
+
+		lcd.Print("Second Line", 2) // print 'Second Line' at line 2
+	}
+*/
 func (l LCD) Print(txt string, line int) {
 	l.write(LCD_LINES[line], 0)
 	for _, v := range txt {
@@ -64,14 +78,17 @@ func (l LCD) Print(txt string, line int) {
 	}
 }
 
+//Clear, clears the entire screen
 func (l LCD) Clear() {
 	l.write(0x01, 0)
 }
 
+//BackLightOff turns off the LCD's backlight
 func (l LCD) BackLightOff() {
 	l.Device.Write([]byte{0x00})
 }
 
+//BackLightOn turns on the LCD's backlight
 func (l LCD) BackLightOn() {
 	l.Device.Write([]byte{0x08})
 }
