@@ -9,7 +9,7 @@ type LCD struct {
 	Device *i2c.Dev
 }
 
-var DefaultLCD = NewLCD(0x27)
+var DefaultLCD, _ = NewLCD(0x27)
 
 const SLEEP = 80 * time.Microsecond
 

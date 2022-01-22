@@ -5,17 +5,23 @@ A simple LCD controller package for raspberry pi liquid crystal I²C displays.
 
 ```go
 import (
-  lcd "github.com/polarspetroll/LiquidCrystalRPI"
+  "log"
   "time"
+
+  lcd "github.com/polarspetroll/LiquidCrystalRPI"
 )
 
-l := lcd.NewLCD(0x27) // specify the I²C device address
 
-/* You can also use the default configuration like so :
-
-l := lcd.DefaultLCD
-*/
 func main() {
+  l, err := lcd.NewLCD(0x27) // specify the I²C device address
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  /* You can also use the default configuration like so :
+
+  l := lcd.DefaultLCD
+  */
   l.Print("Hello World!", 1) // print 'Hello World' at line 1
   l.Print("Second Line", 2) // print 'Second Line' at line 2
   time.Sleep(3 * time.Second)

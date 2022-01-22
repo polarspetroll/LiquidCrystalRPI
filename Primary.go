@@ -1,7 +1,6 @@
 package LiquidCrystalRPI
 
 import (
-	"log"
 	"time"
 
 	"periph.io/x/conn/v3/driver/driverreg"
@@ -10,18 +9,28 @@ import (
 	"periph.io/x/host/v3"
 )
 
-func initialize() {
+func initialize() error {
 	_, err := host.Init()
-	checkerr(err)
+	if err != nil {
+		return err
+	}
 	_, err = driverreg.Init()
-	checkerr(err)
+	if err != nil {
+		return err
+	}
+	return nil
 
 }
 
-func NewLCD(addr uint16) (lcd LCD) {
-	initialize()
+func NewLCD(addr uint16) (lcd LCD, err error) {
+	err = initialize()
+	if err != nil {
+		return LCD{}, err
+	}
 	bus, err := i2creg.Open("1")
-	checkerr(err)
+	if err != nil {
+		return LCD{}, err
+	}
 	lcd = LCD{
 		Device: &i2c.Dev{Addr: addr, Bus: bus},
 	}
@@ -32,7 +41,7 @@ func NewLCD(addr uint16) (lcd LCD) {
 	lcd.write(0x28, 0)
 	lcd.write(0x01, 0)
 	time.Sleep(SLEEP)
-	return lcd
+	return lcd, nil
 }
 
 func (l LCD) write_byte(b byte) {
@@ -65,11 +74,4 @@ func (l LCD) BackLightOff() {
 
 func (l LCD) BackLightOn() {
 	l.Device.Write([]byte{0x08})
-}
-
-///////////////////////////////
-func checkerr(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
 }
