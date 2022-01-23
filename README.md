@@ -33,7 +33,8 @@ func main() {
 }
 
 ```
---
+---
+
 #### Features 
 
 - Scrolling text  
