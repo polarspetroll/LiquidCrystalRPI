@@ -33,3 +33,10 @@ func main() {
 }
 
 ```
+--
+#### Features 
+
+- Scrolling text  
+- Backlight control
+- Printing on a specific line
+
