@@ -13,7 +13,7 @@ import (
 
 
 func main() {
-  l, err := lcd.NewLCD(0x27) // specify the I²C device address
+  l, err := lcd.NewLCD(0x27, 16, 2) // specify the I²C device address, width and height
   if err != nil {
     log.Fatal(err)
   }
@@ -29,6 +29,7 @@ func main() {
   time.Sleep(3 * time.Second)
   l.BackLightOff() // turn off backlight
   time.Sleep(2 * time.Second)
-  l.BackLightOn() //turn on backlight  
+  l.BackLightOn() //turn on backlight
 }
+
 ```
