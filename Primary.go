@@ -1,6 +1,7 @@
 package LiquidCrystalRPI
 
 import (
+	"strings"
 	"time"
 
 	"periph.io/x/conn/v3/driver/driverreg"
@@ -24,7 +25,8 @@ func initialize() error {
 
 // This function returns an object that represents a LCD.
 // The addr is the I²C device address (0x27 is the most common one).
-func NewLCD(addr uint16) (lcd LCD, err error) {
+// width and height is the LCD's size.
+func NewLCD(addr uint16, width, height int) (lcd LCD, err error) {
 	err = initialize()
 	if err != nil {
 		return LCD{}, err
@@ -35,6 +37,8 @@ func NewLCD(addr uint16) (lcd LCD, err error) {
 	}
 	lcd = LCD{
 		Device: &i2c.Dev{Addr: addr, Bus: bus},
+		Height: height,
+		Width:  width,
 	}
 	lcd.write(0x33, 0)
 	lcd.write(0x32, 0)
@@ -91,4 +95,64 @@ func (l LCD) BackLightOff() {
 //BackLightOn turns on the LCD's backlight
 func (l LCD) BackLightOn() {
 	l.Device.Write([]byte{0x08})
+}
+
+// ScrollText iterates over the txt and prints it on the LCD
+// txt : Text to be printed
+// row : line number
+// delay : scroll speed(lower = faster)
+
+/*
+Example:
+	import (
+	"time"
+
+	lcd "github.com/polarspetroll/LiquidCrystalRPI"
+)
+
+func main() {
+	l := lcd.DefaultLCD
+	defer l.Close()
+	delay := 300 * time.Millisecond
+	for i := 0; i < 2; i++ {
+		l.ScrollText("Long Text : github.com/polarspetroll/LiquidCrystalRPI", 1, delay)
+	}
+	l.Clear()
+	for i = 0; i < 2; i++ {
+		l.ScrollText("Short Text!", 1, delay)
+	}
+
+}
+
+*/
+func (l LCD) ScrollText(txt string, line int, delay time.Duration) {
+	if len(txt) < l.Width {
+		for range txt {
+			txt += " "
+		}
+		l.short_text_scroll(txt, line, delay)
+	} else if len(txt) > l.Width {
+		l.long_text_scroll(txt, line, delay)
+	}
+}
+
+func (l LCD) long_text_scroll(txt string, line int, delay time.Duration) {
+	var tmp string
+	for range txt {
+		tmp = string(txt[0])
+		txt = strings.Replace(txt, string(txt[0]), "", 1)
+		txt += tmp
+		l.Print(txt[0:l.Width-1], line)
+		time.Sleep(delay)
+	}
+}
+func (l LCD) short_text_scroll(txt string, line int, delay time.Duration) {
+	var tmp string
+	for range txt {
+		tmp = string(txt[0])
+		txt = strings.Replace(txt, string(txt[0]), "", 1)
+		txt += tmp
+		l.Print(txt, line)
+		time.Sleep(delay)
+	}
 }

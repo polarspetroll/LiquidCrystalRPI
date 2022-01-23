@@ -7,11 +7,13 @@ import (
 
 type LCD struct {
 	Device *i2c.Dev
+	Height int
+	Width  int
 }
 
-var DefaultLCD, _ = NewLCD(0x27)
+var DefaultLCD, _ = NewLCD(0x27, 16, 2)
 
-const SLEEP = 80 * time.Microsecond
+const SLEEP = 50 * time.Microsecond
 
 var LCD_LINES = map[int]byte{
 	1: 0x80,
