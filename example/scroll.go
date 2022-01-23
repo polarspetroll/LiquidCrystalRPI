@@ -14,7 +14,7 @@ func main() {
 	}
 	l.Clear()
 	for i := 0; i < 2; i++ {
-		l.ScrollText("Short Text!", 1, delay)
+		l.ScrollText("Short Text!", 2, delay)
 	}
 
 }
