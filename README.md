@@ -35,9 +35,9 @@ func main() {
 ```
 ---
 
-#### Features 
+#### Features
 
 - Scrolling text  
 - Backlight control
 - Printing on a specific line
-
+- Custom characters

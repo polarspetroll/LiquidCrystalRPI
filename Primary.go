@@ -50,19 +50,6 @@ func NewLCD(addr uint16, width, height int) (lcd LCD, err error) {
 	return lcd, nil
 }
 
-func (l LCD) write_byte(b byte) {
-	l.Device.Write([]byte{b})
-	l.Device.Write([]byte{b | 0b00000100})
-	time.Sleep(SLEEP)
-	l.Device.Write([]byte{b & ^byte(0b00000100)})
-	time.Sleep(SLEEP)
-}
-
-func (l LCD) write(b, n byte) {
-	l.write_byte(n | (b & 0xF0) | 0x08)
-	l.write_byte(n | ((b << 4) & 0xF0) | 0x08)
-}
-
 // This function prints a string on the LCD.
 //txt is the string that you want to print.
 //line is the line of the text.
@@ -148,6 +135,7 @@ func (l LCD) long_text_scroll(txt string, line int, delay time.Duration) {
 		time.Sleep(delay)
 	}
 }
+
 func (l LCD) short_text_scroll(txt string, line int, delay time.Duration) {
 	var tmp string
 	for range txt {
@@ -157,4 +145,18 @@ func (l LCD) short_text_scroll(txt string, line int, delay time.Duration) {
 		l.Print(txt, line)
 		time.Sleep(delay)
 	}
+}
+
+
+func (l LCD) write_byte(b byte) {
+	l.Device.Write([]byte{b})
+	l.Device.Write([]byte{b | 0b00000100})
+	time.Sleep(SLEEP)
+	l.Device.Write([]byte{b & ^byte(0b00000100)})
+	time.Sleep(SLEEP)
+}
+
+func (l LCD) write(b, n byte) {
+	l.write_byte(n | (b & 0xF0) | 0x08)
+	l.write_byte(n | ((b << 4) & 0xF0) | 0x08)
 }
