@@ -147,7 +147,6 @@ func (l LCD) short_text_scroll(txt string, line int, delay time.Duration) {
 	}
 }
 
-
 func (l LCD) write_byte(b byte) {
 	l.Device.Write([]byte{b})
 	l.Device.Write([]byte{b | 0b00000100})
